@@ -55,4 +55,4 @@ Database: `u4h_fundraising` · collections: `roster`, `recommendations`, `feedba
 3. Add `GEMINI_API_KEY` and `MONGODB_URI` under **Settings → Secrets**.
 
 ## Team
-Built by **Terrence**, **Hugo**, and **Mahlet**.
+Built by **Terrence**, **Hugo**, **Mahlet**, and **Joshua**.
