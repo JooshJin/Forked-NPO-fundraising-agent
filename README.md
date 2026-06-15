@@ -1,3 +1,6 @@
+# Disclaimer:
+### Repository is a detached fork of https://github.com/Hugo1223gogo/NPO-fundraising-agent as a working copy for the Summer 2026 Unite for Health fundraising team.
+
 ---
 title: U4H Donor Recommendation Agent
 emoji: 💙
