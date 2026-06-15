@@ -27,15 +27,27 @@ def test_connection() -> str:
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
+# insert + update functions for roster, recommendations, and feedback, as well as retrieval functions.
+def upsert_person(person: dict) -> str:
+    name = person.get("name", "").strip()
+    if not name:
+        return "skipped"
+    result = roster_col.update_one(
+        {"name": {"$regex": f"^{name}$", "$options": "i"}},
+        {"$set": {**person, "updated_at": _now_iso()}},
+        upsert=True,
+    )
+    return "inserted" if result.upserted_id else "updated"
 
 def seed_roster_if_empty(people: list[dict]) -> int:
-    if roster_col.count_documents({}) > 0:
-        return 0
     if not people:
         return 0
-    roster_col.insert_many(people)
-    return len(people)
-
+    count = 0
+    for person in people:
+        status = upsert_person(person)
+        if status == "inserted":
+            count += 1
+    return count
 
 def reseed_roster(people: list[dict]) -> int:
     roster_col.delete_many({})
@@ -47,12 +59,6 @@ def reseed_roster(people: list[dict]) -> int:
 
 def get_roster() -> list[dict]:
     return list(roster_col.find({}, {"_id": 0}))
-
-
-def add_person_to_roster(person: dict) -> str:
-    doc = {**person, "added_at": _now_iso()}
-    result = roster_col.insert_one(doc)
-    return str(result.inserted_id)
 
 
 def find_person_by_name(name: str) -> dict | None:
@@ -71,7 +77,6 @@ def update_person_in_roster(existing_name: str, updates: dict) -> int:
         {"$set": payload},
     )
     return result.modified_count
-
 
 def save_recommendation(rec: dict) -> str:
     doc = {**rec, "created_at": _now_iso()}

@@ -2,7 +2,7 @@ import streamlit as st
 
 from data_loader import load_roster_from_csv
 from memory import (
-    add_person_to_roster,
+    upsert_person,
     find_person_by_name,
     get_feedback,
     get_feedback_for_person,
@@ -373,7 +373,7 @@ with tab_add:
                         else:
                             st.info(f"No changes were needed for {existing_name}.")
                     else:
-                        add_person_to_roster(payload)
+                        upsert_person(payload)
                         st.success(f"✓ {f_name.strip()} added to the roster.")
                     del st.session_state["pending_contact"]
                     st.session_state.pop("pending_existing_name", None)
