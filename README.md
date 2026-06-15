@@ -1,6 +1,3 @@
-# Disclaimer:
-### Repository is a detached fork of https://github.com/Hugo1223gogo/NPO-fundraising-agent as a working copy for the Summer 2026 Unite for Health fundraising team.
-
 ---
 title: U4H Donor Recommendation Agent
 emoji: 💙
@@ -12,6 +9,9 @@ app_file: app.py
 pinned: false
 short_description: AI fundraising copilot — who to contact, how, and why.
 ---
+## Disclaimer:
+#### Repository is a detached fork of https://github.com/Hugo1223gogo/NPO-fundraising-agent as a working copy for the Summer 2026 Unite for Health fundraising team.
+
 
 # U4H Donor Recommendation Agent
 
