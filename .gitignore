@@ -15,6 +15,9 @@ env/
 *.egg-info/
 .pytest_cache/
 
+# Tests
+test_*.py
+
 # Streamlit
 .streamlit/secrets.toml
 
