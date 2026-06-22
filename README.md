@@ -36,7 +36,7 @@ cp .env.example .env  # then fill in your keys
 streamlit run app.py
 ```
 
-The roster auto-seeds from [data/demo_roster.csv](data/demo_roster.csv) on first run.
+The roster auto-seeds from [data/roster.csv](data/roster.csv) on first run. Create a roster.csv file or change demo_roster.csv to roster.csv.
 
 ## Environment variables / secrets
 - `GEMINI_API_KEY` — Google Gemini API key

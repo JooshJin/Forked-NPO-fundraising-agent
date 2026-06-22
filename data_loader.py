@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-CSV_PATH = Path(__file__).parent / "data" / "demo_roster.csv"
+CSV_PATH = Path(__file__).parent / "data" / "roster.csv"
 
 FIELD_MAP = {
     "Name": "name",

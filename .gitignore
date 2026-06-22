@@ -3,6 +3,9 @@
 .env.local
 *.pem
 
+# Data 
+*.csv
+
 # Python
 __pycache__/
 *.py[cod]
