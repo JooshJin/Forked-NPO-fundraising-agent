@@ -1,9 +1,11 @@
 import os
+import time
 from datetime import datetime, timezone
 
 from bson import ObjectId
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
 load_dotenv()
 
@@ -11,7 +13,17 @@ MONGODB_URI = os.getenv("MONGODB_URI")
 if not MONGODB_URI:
     raise ValueError("MONGODB_URI not found in .env")
 
-client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
+client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=8000)
+
+
+def _with_retry(fn, retries=3, delay=2):
+    for attempt in range(retries):
+        try:
+            return fn()
+        except (ConnectionFailure, ServerSelectionTimeoutError):
+            if attempt == retries - 1:
+                raise
+            time.sleep(delay)
 db = client["u4h_fundraising"]
 
 roster_col = db["roster"]
@@ -20,7 +32,7 @@ feedback_col = db["feedback"]
 
 
 def test_connection() -> str:
-    client.admin.command("ping")
+    _with_retry(lambda: client.admin.command("ping"))
     return "MongoDB connection successful"
 
 
@@ -58,7 +70,7 @@ def reseed_roster(people: list[dict]) -> int:
 
 
 def get_roster() -> list[dict]:
-    return list(roster_col.find({}, {"_id": 0}))
+    return _with_retry(lambda: list(roster_col.find({}, {"_id": 0})))
 
 
 def find_person_by_name(name: str) -> dict | None:
@@ -124,11 +136,14 @@ def get_feedback_for_person(name: str) -> list[dict]:
 
 
 def get_outcome_history(limit: int = 100) -> list[dict]:
+    rows = _with_retry(
+        lambda: list(feedback_col.find({}, {"_id": 0}).sort("_id", -1).limit(limit))
+    )
     return [
         {
             "person_name": fb.get("person_name"),
             "outcome": fb.get("outcome"),
             "note": fb.get("note", ""),
         }
-        for fb in feedback_col.find({}, {"_id": 0}).sort("_id", -1).limit(limit)
+        for fb in rows
     ]

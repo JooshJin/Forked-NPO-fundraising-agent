@@ -37,7 +37,12 @@ def recommend(need: str, filters: dict | None = None) -> dict:
     )
 
     response = model.generate_content(prompt)
-    result = json.loads(_strip_fences(response.text))
+    try:
+        result = json.loads(_strip_fences(response.text))
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Gemini returned unparseable JSON: {e}\n\nRaw response:\n{response.text}"
+        ) from e
 
     result["need"] = need
     result["filters"] = filters or {}
@@ -58,6 +63,11 @@ def extract_contact(linkedin: str, context: str, pdf_bytes: bytes | None = None)
         parts.append({"mime_type": "application/pdf", "data": pdf_bytes})
 
     response = model.generate_content(parts)
-    result = json.loads(_strip_fences(response.text))
+    try:
+        result = json.loads(_strip_fences(response.text))
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Gemini returned unparseable JSON: {e}\n\nRaw response:\n{response.text}"
+        ) from e
     result["linkedin_url"] = linkedin.strip()
     return result
