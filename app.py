@@ -127,7 +127,7 @@ def _person_lookup(roster: list[dict], name: str) -> dict:
 st.title("U4H Donor Recommendation Agent")
 st.markdown(
     "<div class='byline'>"
-    "Built by <b>Terrence</b>, <b>Hugo</b>, <b>Mahlet</b>, and <b>Josh</b>· "
+    "Built by <b>Terrence</b>, <b>Hugo</b>, <b>Mahlet</b>, and <b>Josh</b> · "
     "For a given fundraising need, recommend who to contact, through which pathway, and why."
     "</div>",
     unsafe_allow_html=True,
