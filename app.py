@@ -11,6 +11,7 @@ from memory import (
     save_feedback,
     save_recommendation,
     seed_roster_if_empty,
+    test_connection,
     update_person_in_roster,
 )
 from recommender import extract_contact, recommend
@@ -64,10 +65,21 @@ st.markdown(
 
 
 @st.cache_resource
+def _check_db_connection() -> bool:
+    try:
+        test_connection()
+        return True
+    except Exception as e:
+        st.error(f"Cannot reach MongoDB — check your MONGODB_URI. Details: {e}")
+        st.stop()
+
+
+@st.cache_resource
 def _initial_seed() -> int:
     return seed_roster_if_empty(load_roster_from_csv())
 
 
+_check_db_connection()
 _ = _initial_seed()
 
 TILE_COLORS = ["#f97316", "#3b82f6", "#10b981"]  # orange, blue, green
